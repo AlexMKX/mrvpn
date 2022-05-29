@@ -85,9 +85,10 @@ countries:
   - 'RU'
   - 'AM'
 # Pre-defined regexps of the domains to route them to the innernet
+# Note the trailing dot.
 domains:
-  - '^.*\.ru$'
-  - '^.*ozon\.travel$'
+  - '^.*\.ru\.$'
+  - '^.*ozon\.travel\.$'
 # Also can be fetched from the url
 domain_lists:
   - https://raw.githubusercontent.com/AlexMKX/mrvpnconfig/main/domains.txt
