@@ -1,0 +1,25 @@
+- template:
+    src: files/.env.tpl
+    dest: "{{target_dir}}/.env"
+- copy:
+    src: "{{ item }}"
+    dest: "{{target_dir}}"
+  with_items:
+    - "files/ipt-server"
+    - "files/powerdns"
+- copy:
+    content: "{{wireguard_config}}"
+    dest: "{{target_dir}}/conf/wg.conf"
+- copy:
+    src: "files/docker-compose.yml"
+    dest: "{{target_dir}}"
+- name: Recreating stack
+  community.docker.docker_compose:
+    project_src: "{{target_dir}}"
+    state: absent
+- name: Create and start services
+  community.docker.docker_compose:
+    project_src: "{{target_dir}}"
+    state: present
+    build: yes
+

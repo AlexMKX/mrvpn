@@ -1,0 +1,64 @@
+version: "3.3"
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${docker_subnet}.0/24
+  backbone:
+    driver: bridge
+services:
+  wireguard:
+    image: linuxserver/wireguard
+    restart: unless-stopped
+    networks:
+      backbone:
+      vpcbr:
+        ipv4_address: ${docker_subnet}.7
+    volumes:
+      - './conf/wg.conf:/config/wg0.conf'
+      - './wireguard:/config'
+      - '/lib/modules:/lib/modules:ro'
+    environment:
+      - PUID=1000
+      - PGID=1000
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+  pdns-recursor:
+    depends_on:
+      - ipt-server
+    restart: unless-stopped
+    network_mode: host
+    image: pdns-recursor
+    build: ./powerdns
+    environment:
+      - PDNS_api_key=secret
+      - PDNS_webserver=no
+      - PDNS_lua_dns_script=/interceptor.lua
+      - PDNS_disable_packetcache=yes
+      - PDNS_local_port=1053
+
+  ipt-server:
+    restart: unless-stopped
+    network_mode: "host"
+    image: ipt-server
+    build: ./ipt-server
+    volumes:
+      - "/etc/mrvpn.conf:/mrvpn.conf"
+      - "ipt_cache:/var/ipt_cache/"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - "IPTABLES=/sbin/iptables"
+      - "IPTABLES_SAVE=/sbin/iptables-save"
+      - "IPTABLES_RESTORE=/sbin/iptables-restore"
+      - "CONFIG=/mrvpn.conf"
+
+volumes:
+  ipt_cache:

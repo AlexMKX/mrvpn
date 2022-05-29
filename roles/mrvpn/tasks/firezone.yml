@@ -1,0 +1,39 @@
+- stat:
+    path: /etc/firezone/firezone.rb
+  register: p
+- block:
+    - name: "Prerequisites for firezone"
+      file:
+        path: "{{target_dir}}/firezone_install.sh"
+        state: absent
+    - name: "Downloading installer"
+      get_url:
+        url: https://github.com/firezone/firezone/raw/master/scripts/install.sh
+        dest: /tmp/firezone_install.sh
+        mode: 0755
+    - name: "Installing Firezone"
+      ansible.builtin.expect:
+        command: "{{target_dir}}/firezone_install.sh"
+        echo: yes
+        timeout: null
+        creates: /opt/firezone
+        responses:
+          "Enter the administrator email you'd like to use for logging into this Firezone instance:": "{{firezone_admin}}"
+          "Could we email you to ask for product feedback.*": "n"
+          "Press <ENTER> to install .*": ""
+    - name: "Resetting admin password"
+      file:
+        name: "{{target_dir}}/firezone_admin_password"
+        state: absent
+    - shell: firezone-ctl create-or-reset-admin | grep Password | awk '{print "{{firezone_admin}}:" $2}' > {{target_dir}}/firezone_admin_password
+    - name: "Configuring"
+      template:
+        src: files/firezone/firezone.rb
+        dest: /etc/firezone/firezone.rb
+    - blockinfile:
+        path: /etc/firezone/firezone.rb
+        insertbefore: BOF
+        block: "{{firezone_config}}"
+      when: firezone_config is defined
+    - shell: firezone-ctl reconfigure
+  when: (p.stat.exists == False) or (firezone_redeploy == True )

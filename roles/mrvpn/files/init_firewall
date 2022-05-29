@@ -1,0 +1,21 @@
+#!/bin/bash
+while ! ping -c 1 "$(jq -r ".docker_subnet" /etc/mrvpn.conf)".7 >/dev/null 2>&1; do
+  echo "Waiting for upstream WG to up"
+  sleep 10
+done
+echo "$(jq -r ".route_table_num" /etc/mrvpn.conf)" MRVPN >/etc/iproute2/rt_tables.d/MRVPN.conf
+
+ip route add table MRVPN default via "$(jq -r ".docker_subnet" /etc/mrvpn.conf)".7
+ip rule add fwmark "$(jq -r ".route_table_num" /etc/mrvpn.conf)" table MRVPN
+
+if [[ $(iptables-save -t nat | grep "MRVPN_DNS_UDP" | wc -l) == 0 ]]; then
+  iptables -t nat -A PREROUTING -i wg-firezone -p udp --dport 53 -j DNAT --to-destination $(jq -r ".vpn_host" /etc/mrvpn.conf):1053 -m comment --comment "MRVPN_DNS_UDP"
+fi
+
+if [[ $(iptables-save -t nat | grep "MRVPN_DNS_TCP" | wc -l) == 0 ]]; then
+  iptables -t nat -A PREROUTING -i wg-firezone -p tcp --dport 53 -j DNAT --to-destination $(jq -r ".vpn_host" /etc/mrvpn.conf):1053 -m comment --comment "MRVPN_DNS_TCP"
+fi
+
+if [[ $(iptables -L -t mangle -n | grep MRVPN_MSS_CLAMP | wc -l) == 0 ]]; then
+  iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu -m comment --comment "MRVPN_MSS_CLAMP"
+fi
