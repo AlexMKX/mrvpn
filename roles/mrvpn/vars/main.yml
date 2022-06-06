@@ -42,3 +42,6 @@ firezone_redeploy: False
 
 # Where services will reside
 target_dir: /srv/mrvpn
+
+# MTU
+mtu: 1412

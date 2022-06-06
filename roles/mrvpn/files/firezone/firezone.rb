@@ -12,7 +12,7 @@ default['firezone']['wireguard']['ipv4']['network'] = '{{vpn_subnet}}'
 default['firezone']['wireguard']['ipv4']['address'] = '{{vpn_host}}'
 
 #needed for quik to work properly
-default['firezone']['wireguard']['mtu'] = {{MTU}}
+default['firezone']['wireguard']['mtu'] = {{mtu}}
 
 # # If using the 'google' authentication method, set 'enabled' to true and configure relevant settings below.
 # default['firezone']['authentication']['google']['enabled'] = false
@@ -353,8 +353,8 @@ default['firezone']['wireguard']['mtu'] = {{MTU}}
 # 
 # # Paths to the SSL certificate and key files. If these are not provided we will
 # # attempt to generate a self-signed certificate and use that instead.
-# default['firezone']['ssl']['certificate'] = nil
-# default['firezone']['ssl']['certificate_key'] = nil
+default['firezone']['ssl']['certificate'] = nil
+default['firezone']['ssl']['certificate_key'] = nil
 # 
 # # Path to the SSL dhparam file if you want to specify your own SSL DH parameters.
 # default['firezone']['ssl']['ssl_dhparam'] = nil

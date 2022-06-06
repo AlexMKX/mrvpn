@@ -118,3 +118,27 @@ target_dir: /srv/mrvpn
 After role deployment is done, you can find the FireZone credentials in the ```target_dir/firezone_admin_password```
 To reset, or, actually, recover admin password - set the firezone_redeploy to True and run role deployment again
 
+### Running ansible for the first time
+
+First of all we need to create a virtualenv and install ansible as dependency
+```bash
+make develop
+```
+
+This will create new virtlenv and install dependecies, then we have to activate virtual env
+
+```bash
+source venv/bin/activate
+```
+
+After we activated our virtualenv we can run our ansible playbooks, if it's first run and you don't have 
+docker installed on our remote server you have to run docker playbooks.
+But before this you have to write your remote server ip to hosts.yml, after run docker playbook like this
+```bash
+ansible-playbook -i hosts.yml docker.yml
+```
+
+After docker installation we can run out deployment playbook
+```bash
+ansible-playbook -i hosts.yml deploy.yml
+```
