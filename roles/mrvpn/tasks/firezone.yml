@@ -19,7 +19,7 @@
         dest: "{{target_dir}}/firezone_install.sh"
         mode: 0755
     - name: "Installing Firezone"
-      debugger: always
+#      debugger: always
       ansible.builtin.expect:
         command: '/bin/bash -c "{{target_dir}}/firezone_install.sh | tee {{target_dir}}/firezone_install.log"'
         echo: yes
