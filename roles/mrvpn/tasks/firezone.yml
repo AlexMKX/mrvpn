@@ -9,7 +9,7 @@
     - name: "Downloading installer"
       get_url:
         url: https://github.com/firezone/firezone/raw/master/scripts/install.sh
-        dest: /tmp/firezone_install.sh
+        dest: "{{target_dir}}/firezone_install.sh"
         mode: 0755
     - name: "Installing Firezone"
       ansible.builtin.expect:
