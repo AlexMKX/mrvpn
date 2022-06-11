@@ -20,7 +20,7 @@
         mode: 0755
     - name: "Installing Firezone"
       ansible.builtin.expect:
-        command: "{{target_dir}}/firezone_install.sh | tee {{target_dir}}/firezone_install.log"
+        command: "{{target_dir}}/firezone_install.sh 2>&1 | tee {{target_dir}}/firezone_install.log"
         echo: yes
         timeout: null
         creates: /opt/firezone
@@ -32,7 +32,7 @@
       file:
         name: "{{target_dir}}/firezone_admin_password"
         state: absent
-    - shell: firezone-ctl create-or-reset-admin | grep Password | awk '{print "{{firezone_admin}}:" $2}' > {{target_dir}}/firezone_admin_password
+    - shell: firezone-ctl create-or-reset-admin | grep -E 'Email|Password' | awk '{print $2}' > {{target_dir}}/firezone_admin_password
     - name: "Configuring"
       #todo: move to up and perform reconfigure when configuration has been changed
       template:
