@@ -11,8 +11,8 @@ default['firezone']['wireguard']['ipv4']['network'] = '{{vpn_subnet}}'
 # # contained within the WireGuard network specific above. Default 10.3.2.1.
 default['firezone']['wireguard']['ipv4']['address'] = '{{vpn_host}}'
 
-#needed for quik to work properly
-default['firezone']['wireguard']['mtu'] = {{MTU}}
+#needed for quic to work properly
+#default['firezone']['wireguard']['mtu'] = {{MTU}}
 
 # # If using the 'google' authentication method, set 'enabled' to true and configure relevant settings below.
 # default['firezone']['authentication']['google']['enabled'] = false
