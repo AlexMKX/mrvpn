@@ -4,7 +4,7 @@
         content: "{{ vars | to_nice_json }}"
         dest: "/etc/mrvpn.conf"
     - package:
-        name: [ wireguard, docker, docker-compose, python3-pip, curl, jq ]
+        name: [ wireguard, docker, docker.io, docker-compose, python3-pip, curl, jq ]
         state: present
     - name: install pexpect
       pip:
