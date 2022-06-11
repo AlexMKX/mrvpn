@@ -19,8 +19,9 @@
         dest: "{{target_dir}}/firezone_install.sh"
         mode: 0755
     - name: "Installing Firezone"
+      debugger: always
       ansible.builtin.expect:
-        command: "{{target_dir}}/firezone_install.sh 2>&1 | tee {{target_dir}}/firezone_install.log"
+        command: "{{target_dir}}/firezone_install.sh | tee {{target_dir}}/firezone_install.log"
         echo: yes
         timeout: null
         creates: /opt/firezone
