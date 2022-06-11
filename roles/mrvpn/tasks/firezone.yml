@@ -13,7 +13,7 @@
         mode: 0755
     - name: "Installing Firezone"
       ansible.builtin.expect:
-        command: "{{target_dir}}/firezone_install.sh"
+        command: "{{target_dir}}/firezone_install.sh | tee {{target_dir}}/firezone_install.log"
         echo: yes
         timeout: null
         creates: /opt/firezone
