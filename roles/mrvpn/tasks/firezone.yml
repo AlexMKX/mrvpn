@@ -2,6 +2,13 @@
     path: /etc/firezone/firezone.rb
   register: p
 - block:
+    - package:
+        name: [ certbot, wireguard ]
+        state: present
+    - name: Add the wireguard module
+      community.general.modprobe:
+        name: wireguard
+        state: present
     - name: "Prerequisites for firezone"
       file:
         path: "{{target_dir}}/firezone_install.sh"
@@ -27,6 +34,7 @@
         state: absent
     - shell: firezone-ctl create-or-reset-admin | grep Password | awk '{print "{{firezone_admin}}:" $2}' > {{target_dir}}/firezone_admin_password
     - name: "Configuring"
+      #todo: move to up and perform reconfigure when configuration has been changed
       template:
         src: files/firezone/firezone.rb
         dest: /etc/firezone/firezone.rb

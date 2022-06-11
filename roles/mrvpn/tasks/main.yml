@@ -6,10 +6,6 @@
     - package:
         name: [ wireguard, docker, docker-compose, python3-pip, curl, jq ]
         state: present
-    - name: Add the wireguard module
-      community.general.modprobe:
-        name: wireguard
-        state: present
     - name: install pexpect
       pip:
         name: pexpect
