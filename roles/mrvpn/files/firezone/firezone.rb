@@ -12,7 +12,7 @@ default['firezone']['wireguard']['ipv4']['network'] = '{{vpn_subnet}}'
 default['firezone']['wireguard']['ipv4']['address'] = '{{vpn_host}}'
 
 #needed for quic to work properly
-#default['firezone']['wireguard']['mtu'] = {{MTU}}
+#default['firezone']['wireguard']['mtu'] = 1280
 
 # # If using the 'google' authentication method, set 'enabled' to true and configure relevant settings below.
 # default['firezone']['authentication']['google']['enabled'] = false
