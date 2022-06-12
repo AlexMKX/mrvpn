@@ -2,9 +2,10 @@
     path: /etc/firezone/firezone.rb
   register: p
 - block:
-    - package:
+    - apt:
         name: [ certbot, wireguard ]
         state: present
+        update_cache: yes
     - name: Add the wireguard module
       community.general.modprobe:
         name: wireguard
