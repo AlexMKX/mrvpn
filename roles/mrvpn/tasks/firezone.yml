@@ -19,6 +19,9 @@
         url: https://github.com/firezone/firezone/raw/master/scripts/install.sh
         dest: "{{target_dir}}/firezone_install.sh"
         mode: 0755
+    - file:
+        path: "/etc/firezone"
+        state: directory
     - name: "Configuring"
       #todo: move to up and perform reconfigure when configuration has been changed
       template:
