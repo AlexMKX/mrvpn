@@ -18,8 +18,19 @@
         url: https://github.com/firezone/firezone/raw/master/scripts/install.sh
         dest: "{{target_dir}}/firezone_install.sh"
         mode: 0755
+    - name: "Configuring"
+      #todo: move to up and perform reconfigure when configuration has been changed
+      template:
+        src: files/firezone/firezone.rb
+        dest: /etc/firezone/firezone.rb
+    - blockinfile:
+        path: /etc/firezone/firezone.rb
+        insertbefore: BOF
+        block: "{{firezone_config}}"
+      when: firezone_config is defined
+
     - name: "Installing Firezone"
-#      debugger: always
+      #      debugger: always
       ansible.builtin.expect:
         command: '/bin/bash -c "{{target_dir}}/firezone_install.sh | tee {{target_dir}}/firezone_install.log"'
         echo: yes
@@ -34,15 +45,5 @@
         name: "{{target_dir}}/firezone_admin_password"
         state: absent
     - shell: "firezone-ctl create-or-reset-admin | grep -E 'Email|Password' | awk '{print $2}' > {{target_dir}}/firezone_admin_password"
-    - name: "Configuring"
-      #todo: move to up and perform reconfigure when configuration has been changed
-      template:
-        src: files/firezone/firezone.rb
-        dest: /etc/firezone/firezone.rb
-    - blockinfile:
-        path: /etc/firezone/firezone.rb
-        insertbefore: BOF
-        block: "{{firezone_config}}"
-      when: firezone_config is defined
     - shell: firezone-ctl reconfigure
   when: (p.stat.exists == False) or (firezone_redeploy == True )
