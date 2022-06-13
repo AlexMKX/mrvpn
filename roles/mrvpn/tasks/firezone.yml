@@ -1,17 +1,19 @@
 - stat:
     path: /etc/firezone/firezone.rb
   register: p
-- include_role:
+- name: Include letsencrypt-renewer role
+  include_role:
     name: letsencrypt-renewer
-- include_role:
+- name: Include certbot role
+  include_role:
     name: geerlingguy.certbot
-    vars:
-      certbot_create_if_missing: true
-      certbot_create_method: standalone
-      certbot_auto_renew: false
-      certbot_certs:
-        - domains:
-            - "{{server_url}}"
+  vars:
+    certbot_create_if_missing: true
+    certbot_create_method: standalone
+    certbot_auto_renew: false
+    certbot_certs:
+      - domains:
+          - "{{server_url}}"
 - block:
     - apt:
         name: [ certbot, wireguard ]
