@@ -3,6 +3,15 @@
   register: p
 - include_role:
     name: letsencrypt-renewer
+- include_role:
+    name: geerlingguy.certbot
+    vars:
+      certbot_create_if_missing: true
+      certbot_create_method: standalone
+      certbot_auto_renew: false
+      certbot_certs:
+        - domains:
+            - "{{server_url}}"
 - block:
     - apt:
         name: [ certbot, wireguard ]
