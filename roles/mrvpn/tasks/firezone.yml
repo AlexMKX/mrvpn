@@ -1,6 +1,8 @@
 - stat:
     path: /etc/firezone/firezone.rb
   register: p
+- include_role:
+    name: letsencrypt-renewer
 - block:
     - apt:
         name: [ certbot, wireguard ]
