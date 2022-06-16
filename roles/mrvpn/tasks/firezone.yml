@@ -11,6 +11,7 @@
     certbot_create_if_missing: true
     certbot_create_method: standalone
     certbot_auto_renew: false
+    certbot_admin_email: "info+letsencrypt@{{server_url}}"
     certbot_certs:
       - domains:
           - "{{server_url}}"
