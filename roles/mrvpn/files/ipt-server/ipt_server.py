@@ -146,10 +146,16 @@ def init_iptables(subnets):
     else:
         subprocess.check_output(f'sudo {iptables} -t mangle -N {chain}', shell=True)
     if 'MRVPN_SUBNETS_JUMP' not in output:
+        # route all traffic to outernet
         subprocess.check_output(
-            f'sudo iptables -A PREROUTING -t mangle -i {inbound_if} -p tcp -j {chain} '
+            f'sudo iptables -A PREROUTING -t mangle -i {inbound_if}-j {chain} '
             f'-m comment --comment "{chain}_JUMP"',
             shell=True)
+        # route only tcp to outernet
+        # subprocess.check_output(
+        #     f'sudo iptables -A PREROUTING -t mangle -i {inbound_if} -p tcp -j {chain} '
+        #     f'-m comment --comment "{chain}_JUMP"',
+        #     shell=True)
     ipt_rules = '*mangle\n:MRVPN_SUBNETS -\n'
     for n in subnets:
         ipt_rules += f'-A {chain} --dst "{str(n)}" -j RETURN\n'
