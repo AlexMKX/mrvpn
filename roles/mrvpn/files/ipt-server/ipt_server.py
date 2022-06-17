@@ -148,7 +148,7 @@ def init_iptables(subnets):
     if 'MRVPN_SUBNETS_JUMP' not in output:
         # route all traffic to outernet
         subprocess.check_output(
-            f'sudo iptables -A PREROUTING -t mangle -i {inbound_if}-j {chain} '
+            f'sudo iptables -A PREROUTING -t mangle -i {inbound_if} -j {chain} '
             f'-m comment --comment "{chain}_JUMP"',
             shell=True)
         # route only tcp to outernet
