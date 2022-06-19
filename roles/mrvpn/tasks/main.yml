@@ -34,7 +34,7 @@
 
     - name: starting outernet tunnel
       ansible.builtin.systemd:
-        name: wg-quick@mrvpn-wg-outernet
+        name: wg-quick@mrvpn-wg-outer
         state: started
         enabled: yes
         daemon-reload: yes
