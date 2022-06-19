@@ -30,9 +30,9 @@
 
     - copy:
         content: "{{wireguard_config}}"
-        dest: "/etc/wireguard/wg-outer.conf"
+        dest: "/etc/wireguard/mrvpn-wg-outer.conf"
     - shell:
-        cmd: "wg-quick up /etc/wireguard/wg-outer.conf"
+        cmd: "wg-quick up mrvpn-wg-outer"
 
     - shell:
         cmd: "{{target_dir}}/init_firewall"
