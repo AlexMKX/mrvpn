@@ -31,8 +31,13 @@
     - copy:
         content: "{{wireguard_config}}"
         dest: "/etc/wireguard/mrvpn-wg-outer.conf"
-    - shell:
-        cmd: "wg-quick up mrvpn-wg-outer"
+
+    - name: starting outernet tunnel
+      ansible.builtin.systemd:
+        name: wg-quick@mrvpn-wg-outernet
+        state: started
+        enabled: yes
+        daemon-reload: yes
 
     - shell:
         cmd: "{{target_dir}}/init_firewall"
