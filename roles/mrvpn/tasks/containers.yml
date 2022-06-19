@@ -8,9 +8,6 @@
     - "files/ipt-server"
     - "files/powerdns"
 - copy:
-    content: "{{wireguard_config}}"
-    dest: "{{target_dir}}/conf/wg.conf"
-- copy:
     src: "files/docker-compose.yml"
     dest: "{{target_dir}}"
 - name: Recreating stack

@@ -27,6 +27,13 @@
 
     - include_tasks:
         file: containers.yml
+
+    - copy:
+        content: "{{wireguard_config}}"
+        dest: "/etc/wireguard/wg-outer.conf"
+    - shell:
+        cmd: "wg-quick up /etc/wireguard/wg-outer.conf"
+
     - shell:
         cmd: "{{target_dir}}/init_firewall"
 
