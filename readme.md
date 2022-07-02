@@ -72,11 +72,18 @@ The MRVPN is deployed as an ansible role. The 2 hosts are needed for the deploym
           Endpoint = mrvpn.entrypoint_host:51820
           PersistentKeepalive = 0
         firezone_config: |
-# uncomment if you want to use the google authentication         
-#          default['firezone']['authentication']['google']['enabled'] = true
-#          default['firezone']['authentication']['google']['client_id'] = '############################################'
-#          default['firezone']['authentication']['google']['client_secret'] = '############################################'
-#          default['firezone']['authentication']['google']['redirect_uri'] = 'https://{{server_url}}/auth/oidc/google/callback'
+# uncomment if you want to use the google authentication    
+#          default['firezone']['authentication']['oidc'] = {
+#            google: {
+#              discovery_document_uri: "https://accounts.google.com/.well-known/openid-configuration",
+#              client_id: "############################################",
+#              client_secret: "############################################",
+#              redirect_uri: "https://{{server_url}}/auth/oidc/google/callback/",
+#              response_type: "code",
+#              scope: "openid email profile",
+#              label: "Google"
+#            }
+#          }                            
           default['firezone']['ssl']['certificate'] = '/etc/letsencrypt/live/{{server_url}}/fullchain.pem'
           default['firezone']['ssl']['certificate_key'] = '/etc/letsencrypt/live/{{server_url}}/privkey.pem'
 # uncomment if you want to restore the letsencrypt certificates from backup
