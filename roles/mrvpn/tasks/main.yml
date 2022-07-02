@@ -18,8 +18,8 @@
         - "{{target_dir}}"
         - "{{target_dir}}/conf"
         - "{{target_dir}}/var"
-    - include_tasks:
-        file: firezone.yml
+    - include_role:
+        name: firezone
     - copy:
         src: "files/init_firewall"
         dest: "{{target_dir}}/"
