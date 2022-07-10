@@ -6,7 +6,8 @@ RUN apk add --no-cache \
     python3 \
     iptables \
     sudo \
-    nftables
+    nftables \
+    websocat
 
 
 RUN pip install websockets

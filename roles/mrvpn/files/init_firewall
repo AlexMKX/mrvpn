@@ -25,3 +25,10 @@ iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-m
     --comment "MRVPN_MSS_CLAMP"
 iptables -t nat -C POSTROUTING -o mrvpn-wg-outer -j MASQUERADE >/dev/null 2>&1 ||
   iptables -t nat -A POSTROUTING -o mrvpn-wg-outer -j MASQUERADE
+
+#move all outgoing requests to the outernet because PDNS Recusros won't work for some hosts otherwise
+iptables -t mangle -C OUTPUT -o `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 -j MARK --set-mark 11 > /dev/null 2>&1 ||
+  iptables -t mangle -A OUTPUT -o `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 -j MARK --set-mark 11
+
+iptables -t mangle -C OUTPUT -o `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 -j MARK --set-mark 11 > /dev/null 2>&1 ||
+  iptables -t mangle -A OUTPUT -o `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 -j MARK --set-mark 11

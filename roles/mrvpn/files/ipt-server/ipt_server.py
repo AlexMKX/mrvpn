@@ -17,6 +17,7 @@ import time
 import json
 import random
 import pickle
+import signal
 
 logging.getLogger().setLevel(logging.INFO)
 

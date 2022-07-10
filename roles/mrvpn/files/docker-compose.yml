@@ -1,13 +1,13 @@
 version: "3.3"
-
-networks:
-  vpcbr:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: ${docker_subnet}.0/24
-  backbone:
-    driver: bridge
+#
+#networks:
+#  vpcbr:
+#    driver: bridge
+#    ipam:
+#      config:
+#        - subnet: ${docker_subnet}.0/24
+#  backbone:
+#    driver: bridge
 services:
   pdns-recursor:
     depends_on:
@@ -39,6 +39,12 @@ services:
       - "IPTABLES_SAVE=/sbin/iptables-save"
       - "IPTABLES_RESTORE=/sbin/iptables-restore"
       - "CONFIG=/mrvpn.conf"
+    healthcheck:
+      test: [ "CMD", "sh", "-c", "echo \"\" | websocat ws://127.0.0.1:8765" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 
 volumes:
   ipt_cache:
