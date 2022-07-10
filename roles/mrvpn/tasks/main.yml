@@ -42,6 +42,6 @@
     - cron:
         name: "MRVPN init firewall"
         special_time: reboot
-        job: "{{target_dir}}/init_firewall"
+        job: "{{target_dir}}/init_firewall 2>&1 | logger"
 
   become: true
