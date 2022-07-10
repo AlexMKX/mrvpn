@@ -2,7 +2,7 @@
   block:
     - ansible.builtin.user:
         name: mrvpn
-        register: user_result
+      register: user_result
 
     - copy:
         content: "{{ vars | to_nice_json }}"
