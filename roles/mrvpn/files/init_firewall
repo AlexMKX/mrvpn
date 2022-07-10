@@ -19,10 +19,19 @@ iptables -t nat -C PREROUTING -i wg-firezone -p tcp --dport 53 -j DNAT --to-dest
   iptables -t nat -A PREROUTING -i wg-firezone -p tcp --dport 53 -j DNAT --to-destination \
     $(jq -r ".vpn_host" /etc/mrvpn.conf):1053 -m comment --comment "MRVPN_DNS_TCP"
 
+
 iptables -t mangle -C FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu -m comment \
   --comment "MRVPN_MSS_CLAMP" >/dev/null 2>&1 ||
   iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu -m comment \
     --comment "MRVPN_MSS_CLAMP"
+
+#wait till outernet tunnel is up
+until ping 1.1.1.1 -I  mrvpn-wg-outer -c 1
+do
+        echo "Waiting till outernet tunnel become ready"
+        sleep 0.1
+done
+
 iptables -t nat -C POSTROUTING -o mrvpn-wg-outer -j MASQUERADE >/dev/null 2>&1 ||
   iptables -t nat -A POSTROUTING -o mrvpn-wg-outer -j MASQUERADE
 
