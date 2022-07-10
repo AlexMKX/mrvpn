@@ -1,13 +1,5 @@
 version: "3.3"
-#
-#networks:
-#  vpcbr:
-#    driver: bridge
-#    ipam:
-#      config:
-#        - subnet: ${docker_subnet}.0/24
-#  backbone:
-#    driver: bridge
+
 services:
   pdns-recursor:
     depends_on:
@@ -15,7 +7,10 @@ services:
     restart: unless-stopped
     network_mode: host
     image: pdns-recursor
-    build: ./powerdns
+    build:
+      context: ./powerdns
+      args:
+        UID: "$UID"
     environment:
       - PDNS_api_key=secret
       - PDNS_webserver=no
@@ -27,7 +22,9 @@ services:
     restart: unless-stopped
     network_mode: "host"
     image: ipt-server
-    build: ./ipt-server
+    build:
+      context: ./ipt-server
+
     volumes:
       - "/etc/mrvpn.conf:/mrvpn.conf"
       - "ipt_cache:/var/ipt_cache/"

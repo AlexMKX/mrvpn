@@ -1,6 +1,7 @@
 FROM alpine:latest
 
 #ENV LUA_VERSION 5.1
+ARG UID
 
 RUN apk update
 #
@@ -8,6 +9,8 @@ RUN apk update
 #RUN apk add lua${LUA_VERSION}-dev
 
 RUN apk add bash build-base curl git openssl unzip wget lua5.3-http
+
+RUN adduser -u ${UID} recursor -D
 
 RUN apk add --no-cache \
     pdns-recursor \
