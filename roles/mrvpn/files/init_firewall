@@ -37,8 +37,16 @@ iptables -t nat -C POSTROUTING -o mrvpn-wg-outer -j MASQUERADE >/dev/null 2>&1 |
 
 #todo: add username creation for the docker containers
 #move powerdns outgoing requests to the outernet because PDNS Recusros won't work for some hosts otherwise
-iptables -t mangle -C OUTPUT -m owner --uid-owner 100 -o `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)" > /dev/null 2>&1 ||
-  iptables -t mangle -A OUTPUT -m owner --uid-owner 100 -o `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)"
+iptables -t mangle -C OUTPUT -m owner --uid-owner "$(jq -r ".user_result.uid" /etc/mrvpn.conf)" -o \
+  `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 \
+  -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)" > /dev/null 2>&1 || \
+  iptables -t mangle -A OUTPUT -m owner --uid-owner "$(jq -r ".user_result.uid" /etc/mrvpn.conf)" -o \
+  `ip ro sh default | awk {'print $5'}`  -p tcp --dport 53 \
+  -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)"
 
-iptables -t mangle -C OUTPUT -m owner --uid-owner 100 -o `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)" > /dev/null 2>&1 ||
-  iptables -t mangle -A OUTPUT -m owner --uid-owner 100 -o `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)"
+iptables -t mangle -C OUTPUT -m owner --uid-owner "$(jq -r ".user_result.uid" /etc/mrvpn.conf)" -o \
+  `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 \
+  -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)" > /dev/null 2>&1 || \
+  iptables -t mangle -A OUTPUT -m owner --uid-owner "$(jq -r ".user_result.uid" /etc/mrvpn.conf)" -o \
+  `ip ro sh default | awk {'print $5'}`  -p udp --dport 53 \
+  -j MARK --set-mark "$(jq -r ".route_table_num" /etc/mrvpn.conf)"
