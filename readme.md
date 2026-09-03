@@ -1,3 +1,7 @@
+# EOL Notice
+
+The MRVPN now have a new home and new architecture at https://github.com/AlexMKX/garuda-tunnel
+
 # The MultiRoute VPN
 
 When the internet split into outernet and innernet, it is not enough to have a VPN to reach the outernet. 
